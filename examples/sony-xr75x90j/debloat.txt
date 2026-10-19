@@ -1,0 +1,96 @@
+# Sony XR-75X90J (BRAVIA 4K VH2), Android 12 / SDK 31, China firmware
+# Debloat list. One package per line. Applied with tools/disable.sh, undone with tools/restore.sh.
+#
+# Everything here is disabled for user 0 only (pm disable-user). Nothing is uninstalled and the
+# system image is never touched, so tools/restore.sh reverses every line below.
+#
+# Deliberately KEPT (do not add these):
+#   com.sony.dtv.tvx / tvinput.* / tvsettingsbroadcast / tvapi   the TV app, tuner + HDMI input framework
+#   com.android.tv.settings, com.sony.dtv.settings*              the Settings / input-source menu
+#   com.sony.dtv.remotecontrolsettings, com.uei.quicksetsdk.sony remote + Bluetooth pairing
+#   com.sony.dtv.ime.chww, com.android.tvremoteime               on-screen keyboard
+#   com.android.vending                                          Play Store
+#   com.sony.dtv.voicesearch, com.sony.dtv.searchapp             voice assistant  (user uses it)
+#   com.sony.dtv.tvx.overlay.sortui, com.sony.dtv.settings.overlay, overlays, com.android.* system plumbing
+
+## --- Manufacturer telemetry / analytics -------------------------------------------------
+# Device Agent: Sony's remote-diagnostics/telemetry agent, talks to qterics (Sony's analytics arm).
+com.sony.dtv.da.service
+com.qterics.da.product
+# Interactive TV util: logs app/voice/action usage and ships it out.
+com.sony.dtv.interactivetvutil
+com.sony.dtv.interactivetvutil.output
+# IDD agent: "Improved Device Diagnostics", Sony's crash/usage reporting.
+com.sonyericsson.idd.agent
+# Sony log level plumbing + bug report service.
+com.sony.dtv.sonyloglevelsettingsys
+com.sony.dtv.sonybugreportsys
+# Last access: per-app usage tracking feeding Sony's recommendation/telemetry backend.
+com.sony.dtv.lastaccess
+# Kids profile adapter: log upload + account service.
+com.sony.dtv.kidsprofileadapter
+#
+# HELD BACK (see notes at the end of this file): the MediaTek platform agents are NOT listed here
+# on purpose. They are PERSISTENT system services, none of them holds android.permission.INTERNET,
+# and com.mediatek.agent declares TVRemoteServiceReceiver (com.sony.dtv.tvapi holds its
+# BIND_TVREMOTE_SERVICE_AGENT permission). Disabling them risks the remote control, which this
+# project must never break, and gains almost nothing: without INTERNET they cannot phone home.
+
+## --- Manufacturer content, ads and recommendation services ------------------------------
+# The Sony "Bravia Show" daydream, an ad/content carousel for the screensaver.
+com.sony.dtv.braviashow
+# LivingFit: Sony's sponsored lifestyle/theme content app (installed by the Dangbei market).
+com.sony.dtv.livingfit
+# Sony's preloaded SemcMusic player. Reversible; the user has Kodi/file managers for local media.
+com.sony.dtv.osat.music
+# Shop/demo content app and the multi-screen demo (retail demo residue).
+com.sony.dtv.demosupport
+com.sony.dtv.multiscreendemo
+# NOT disabled: com.sony.dtv.demosystemsupport. Despite the "demo" in its name it owns
+# com.sony.dtv.demosystemsupport.action.TOGGLE_SUBWOOFER over HDMI-CEC, i.e. it is the receiver for
+# the subwoofer/CEC toggle. Disabling it would break that audio feature, so it stays.
+# "My Sony" account/marketing app.
+com.sony.dtv.mysony
+# Sony's own app market front-end (Dangbei-backed store). The Dangbei store below also goes.
+com.sony.dangbeimarket
+# JD IoT shopping/lifestyle integration.
+com.jd.smartservicetwo
+# IR blaster device setup is only for controlling third-party boxes; kept out of scope -> left on.
+# Smart media app is the USB/DLNA media player the user may use for USB drives -> left on.
+# Preinstalled app filtering is a storefront ad filter -> disabling it removes store nagging only.
+com.sony.dtv.preinappfiltering
+
+## --- Third-party launcher / market / poster ads -----------------------------------------
+# Dangbei TVHomeLauncher: the current ad-filled home screen. Disabled AFTER our launcher is default.
+com.dangbei.TVHomeLauncher
+# Dangbei market: third-party app store that also pushes ads and installs other packages.
+com.dangbeimarket
+# Dangbei video poster: splash/ads player that launches on boot.
+com.dangbei.lerad.videoposter
+
+## --- Background services I don't need ----------------------------------------------------
+# LeBo (hpplay) cast/mirror receiver: duplicate casting stack, phone-side mirroring.
+com.hpplay.happyplay.aw
+# Sony second-display / remote mobile settings bridge (phone-as-remote helper).
+com.sony.dtv.seconddispsetting
+# Home network DLNA settings UI is only needed for DLNA browsing -> left on for USB/NAS media.
+# Sony "Huey" DLNA renderer module: lets other devices push media to the TV. User did not ask for it.
+com.sony.huey.dlna.module
+com.sony.huey.dlna.renderersettings
+
+## --- Streaming apps the user does NOT use ------------------------------------------------
+# GITV / iQiyi (银河奇异果) preinstalled streaming app.
+com.gitvvideo.sony
+# NewTV sports app.
+com.newtv.sport
+com.newtv.login
+# OUmi media hub.
+com.oumi.utility.media.hub
+# Ali cloud drive TV client.
+tv.huan.aliyunpan
+
+## --- Firmware update service --------------------------------------------------------------
+# Sony's OTA updater. User did not ask to keep automatic updates.
+com.sony.dtv.systemupdate
+com.sony.dtv.update
+com.sony.dtv.otaurlprovisioning

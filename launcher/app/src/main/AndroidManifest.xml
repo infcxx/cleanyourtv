@@ -53,6 +53,15 @@
             </intent-filter>
         </activity>
 
+        <!-- The input list, shown by MiRemoteKeyService when the TV key is pressed in an app. -->
+        <activity
+            android:name=".InputsActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/Theme.TvHome"
+            android:screenOrientation="landscape" />
+
         <activity
             android:name=".HomeSettingsActivity"
             android:exported="false"
@@ -99,6 +108,22 @@
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/input_key_service" />
+        </service>
+
+        <!-- Xiaomi Bluetooth Voice Remote on Sony sets: Home arrives as KEYCODE_MOVE_HOME and the
+             TV key as KEYCODE_GRAVE, both otherwise dead. Opt-in: MI_REMOTE_SERVICE=1
+             build-and-install.sh; see MiRemoteKeyService. -->
+        <service
+            android:name=".MiRemoteKeyService"
+            android:exported="false"
+            android:label="@string/mi_remote_key_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/mi_remote_key_service" />
         </service>
     </application>
 </manifest>
